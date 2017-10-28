@@ -1,0 +1,69 @@
+@startuml
+title
+Diagram of the class for the game
+"Gravitrips"
+end title
+
+note bottom of Gravitrips
+создаём единственный объект
+gravitrips для всей игры
+end note
+class Gravitrips {
+- ArraList<Player>: playersList
++ setUpMatch()
++ setUpGame()
++ toPlayGame()
++ whoIsWho ()
++ whoIsNextPlayer()
++ outputGameResult()
++ outputMatchResult()
++ finishGravitrips()
+}
+
+note top of GameField
+- создаём объект gameField на
+  каждую новую игру в матче
+- field содержит все ячейки
+  игрового поля {'X', '0', '.'}
+end note
+class GameField {
+- char[][] field: Array
++ outputGameField()
++ gameFieldIsFull()
++ columnIsNotBusy()
+}
+
+note top of Player
+- создаём 2 обекта игроков и записывапем их
+в ArrayList<Player>
+end note
+class Player {
+- playerNumber
+- playerSign
+- playerType: TypesOfPlayers
+- countOfWins
++ getPlayerMove()
++ makePlayerMove()
++ thePlayerWon()
+}
+
+class HumanPlayer {
++ getPlayerMove()
+}
+
+class ComputerPlayer {
++ getPlayerMove()
+}
+
+Player  <|--  HumanPlayer
+Player  <|--  ComputerPlayer
+Player  <.. TypesOfPlayers
+
+enum TypesOfPlayers {
+HUMAN
+COMPUTER
+}
+
+
+
+@enduml
