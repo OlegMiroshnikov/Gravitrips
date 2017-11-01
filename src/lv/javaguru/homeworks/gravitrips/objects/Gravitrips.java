@@ -1,47 +1,42 @@
-package lv.javaguru.homeworks.gravitrips;
+package lv.javaguru.homeworks.gravitrips.objects;
 
-//import lv.javaguru.homeworks.gravitrips.GameField.*;
-
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-import static lv.javaguru.homeworks.gravitrips.Enum.*;
-
 public class Gravitrips {
-    static final int MAX_ROW = 6;
-    static final int MAX_COL = 7;
+    public static final int MAX_ROW = 6;
+    public static final int MAX_COL = 7;
+    private GameField gameField;
+    private Player player1;
+    private Player player2;
+    private Player currentPlayer;
+    private Scanner scanner = new Scanner(System.in);
+    private Random randomGenerator = new Random();
 
-    GameField gameField;
-    ArrayList<Player> playerList = new ArrayList(2);
-    Scanner scanner = new Scanner(System.in);
-    Random randomGenerator = new Random();
-    private int currentPlayerNumber;
+    public void startGravitrips() {
 
-    public static void main(String[] args) {
-        boolean onExitFromGravitrips = false;
-        boolean onExitFromMatch = false;
+        boolean exitFromGravitrips = false;
+        boolean exitFromMatch = false;
         int countOfGames = 0;
         int countOfMatches = 0;
-        Gravitrips gravitrips = new Gravitrips();
-        gravitrips.outputInstructionsToUser();
-        while (!onExitFromGravitrips) {
+        outputInstructionsToUser();
+        while (!exitFromGravitrips) {
             countOfMatches++;
             System.out.println(countOfMatches + " match");
-            gravitrips.setUpMatch(countOfMatches);
+            setUpMatch(countOfMatches);
             countOfGames = 0;
-            onExitFromMatch = false;
-            while (!onExitFromMatch) {
+            exitFromMatch = false;
+            while (!exitFromMatch) {
                 countOfGames++;
                 System.out.println(countOfGames + " game");
-                gravitrips.setUpGame();
-                gravitrips.toPlayGame();
-                onExitFromMatch = gravitrips.onExitFromMatch();
+                setUpGame();
+                toPlayGame();
+                exitFromMatch = exitFromMatch();
             }
-            gravitrips.OutputMatchResult(countOfMatches);
-            onExitFromGravitrips = gravitrips.onExitFromGravitrips();
+            outputMatchResult(countOfMatches);
+            exitFromGravitrips = exitFromGravitrips();
         }
-        gravitrips.finishGravitrips();
+        finishGravitrips();
     }
 
     private void outputInstructionsToUser() {
@@ -66,38 +61,37 @@ public class Gravitrips {
     }
 
     private void toPlayGame() {
-        boolean onExitFromGame = false;
+        boolean exitFromGame = false;
         int playerMove = 0;
-        int winnersPlayerNumber = 0;
         int countOfWins = 0;
-        while (!onExitFromGame) {
-            if (!gameField.onGameFieldIsFull()) {
-                currentPlayerNumber = whoIsNextPlayer();
-                playerMove = playerList.get(currentPlayerNumber - 1).getPlayerMove(scanner, randomGenerator, gameField);
-                playerList.get(currentPlayerNumber - 1).makePlayerMove(playerMove, gameField);
+        Player winnersPlayer = null;
+        while (!exitFromGame) {
+            if (!gameField.gameFieldIsFull()) {
+                currentPlayer = whoIsNextPlayer();
+                playerMove = currentPlayer.getPlayerMove(scanner, randomGenerator, gameField);
+                currentPlayer.makePlayerMove(playerMove, gameField);
                 gameField.outputGameField();
-                if (onExitFromGame = playerList.get(currentPlayerNumber - 1).playerWon(gameField.getField())) {
-                    winnersPlayerNumber = currentPlayerNumber;
-                    countOfWins = playerList.get(currentPlayerNumber - 1).getCountOfWins() + 1;
-                    playerList.get(currentPlayerNumber - 1).setCountOfWins(countOfWins);
+                if (exitFromGame = gameField.playerWon(currentPlayer.getSign())) {
+                    winnersPlayer = currentPlayer;
+                    countOfWins = winnersPlayer.getCountOfWins() + 1;
+                    winnersPlayer.setCountOfWins(countOfWins);
                 }
-                if (playerList.get(0).getPlayerType() == TypesOfPlayers.COMPUTER && playerList.get(1).getPlayerType() == TypesOfPlayers.COMPUTER) {
+                if (player1.getType() == TypesOfPlayers.COMPUTER && player2.getType() == TypesOfPlayers.COMPUTER) {
                     System.out.println("Press ENTER to continue...");
                     String anyKey = scanner.nextLine();
                 }
             } else {
-                onExitFromGame = true;
+                exitFromGame = true;
             }
         }
-        outputGameResult(winnersPlayerNumber);
+        outputGameResult(winnersPlayer);
     }
 
     private void setUpMatch(int countOfMatches) {
-        currentPlayerNumber = 0;
-        playerList.clear();
         whoIsWho();
+        currentPlayer = null;
         System.out.println(countOfMatches + " match " +
-                playerList.get(0).getPlayerType() + " - " + playerList.get(1).getPlayerType());
+                player1.getType() + " - " + player2.getType());
     }
 
     private void whoIsWho() {
@@ -118,10 +112,10 @@ public class Gravitrips {
                 userChoice = Integer.parseInt(scanner.nextLine());
                 switch (userChoice) {
                     case CHOICE_X_ITEM_HUMAN:
-                        playerList.add(new HumanPlayer(1, 'X', TypesOfPlayers.HUMAN, 0));
+                        player1 = new HumanPlayer(1, TypesOfSigns.X, TypesOfPlayers.HUMAN, 0);
                         break;
                     case CHOICE_X_ITEM_COMPUTER:
-                        playerList.add(new ComputerPlayer(1, 'X', TypesOfPlayers.COMPUTER, 0));
+                        player1 = new ComputerPlayer(1, TypesOfSigns.X, TypesOfPlayers.COMPUTER, 0);
                         break;
                     default:
                         System.out.println("Wrong choice! You can use only numbers from 1 or 2");
@@ -145,10 +139,10 @@ public class Gravitrips {
                 userChoice = Integer.parseInt(scanner.nextLine());
                 switch (userChoice) {
                     case CHOICE_O_ITEM_HUMAN:
-                        playerList.add(new HumanPlayer(2, 'O', TypesOfPlayers.HUMAN, 0));
+                        player2 = new HumanPlayer(2, TypesOfSigns.O, TypesOfPlayers.HUMAN, 0);
                         break;
                     case CHOICE_O_ITEM_COMPUTER:
-                        playerList.add(new ComputerPlayer(2, 'O', TypesOfPlayers.COMPUTER, 0));
+                        player2 = new ComputerPlayer(2, TypesOfSigns.O, TypesOfPlayers.COMPUTER, 0);
                         break;
                     default:
                         System.out.println("Wrong choice! You can use only numbers from 1 or 2");
@@ -170,36 +164,34 @@ public class Gravitrips {
         gameField = new GameField(array);
     }
 
-    private int whoIsNextPlayer() {
-        switch (currentPlayerNumber) {
-            case 0:
-                return 1;
-            case 1:
-                return 2;
-            case 2:
-                return 1;
-            default:
-                return 1;
+    private Player whoIsNextPlayer() {
+        if (currentPlayer == null) {
+            currentPlayer = player1;
+        } else if (currentPlayer.equals(player1)) {
+            currentPlayer = player2;
+        } else {
+            currentPlayer = player1;
         }
+        return currentPlayer;
     }
 
-    private void outputGameResult(int winnersPlayerNumber) {
-        if (winnersPlayerNumber > 0) {
+
+    private void outputGameResult(Player winnersPlayer) {
+        if (winnersPlayer != null) {
             System.out.println("Won: player " +
-                    playerList.get(winnersPlayerNumber - 1).getPlayerNumber() +
-                    " as " + playerList.get(winnersPlayerNumber - 1).getPlayerType());
+                    winnersPlayer.getNumber() + " as " + winnersPlayer.getType());
         } else {
             System.out.println("No one won - draw");
         }
     }
 
-    private void OutputMatchResult(int countOfMatches) {
+    private void outputMatchResult(int countOfMatches) {
         System.out.println(countOfMatches + " match " +
-                playerList.get(0).getPlayerType() + "-" + playerList.get(1).getPlayerType() + ", results " +
-                playerList.get(0).getCountOfWins() + " : " + playerList.get(1).getCountOfWins());
+                player1.getType() + "-" + player2.getType() + ", results " +
+                player1.getCountOfWins() + " : " + player2.getCountOfWins());
     }
 
-    private boolean onExitFromMatch() {
+    private boolean exitFromMatch() {
         String userChoice = "";
         System.out.println("Do you want to start a new game in this match (Y/N)?");
         do {
@@ -211,7 +203,7 @@ public class Gravitrips {
         return userChoice.equals("N");
     }
 
-    private boolean onExitFromGravitrips() {
+    private boolean exitFromGravitrips() {
         String userChoice = "";
         System.out.println("Do you want to start a new match (Y/N)?");
         do {
@@ -229,7 +221,7 @@ public class Gravitrips {
     }
 }
 
-//"C:\Program Files\Java\jdk1.8.0_144\bin\java" "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA 2017.2.4\lib\idea_rt.jar=55976:C:\Program Files\JetBrains\IntelliJ IDEA 2017.2.4\bin" -Dfile.encoding=UTF-8 -classpath "C:\Program Files\Java\jdk1.8.0_144\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\deploy.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\cldrdata.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\jfxrt.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\nashorn.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\zipfs.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\javaws.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\jfxswt.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\management-agent.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\plugin.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\rt.jar;C:\Users\Oleg\IdeaProjects\Gravitrips\out\production\Gravitrips" lv.javaguru.homeworks.gravitrips.Gravitrips
+//"C:\Program Files\Java\jdk1.8.0_144\bin\java" "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA 2017.2.4\lib\idea_rt.jar=55976:C:\Program Files\JetBrains\IntelliJ IDEA 2017.2.4\bin" -Dfile.encoding=UTF-8 -classpath "C:\Program Files\Java\jdk1.8.0_144\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\deploy.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\cldrdata.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\jfxrt.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\nashorn.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\ext\zipfs.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\javaws.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\jfxswt.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\management-agent.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\plugin.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_144\jre\lib\rt.jar;C:\Users\Oleg\IdeaProjects\Gravitrips\out\production\Gravitrips" lv.javaguru.homeworks.gravitrips.objects.Gravitrips
 //
 //        Welcome to the game GRAVITRIPS (Four in a Line)
 //        Some assumptions and limitations:
@@ -242,7 +234,7 @@ public class Gravitrips {
 //        - 1-й игрок в качестве фишек использует 'Х'
 //        - 2-й игрок в качестве фишек использует 'O'
 //        - в 1-й игре матча первым ходит 1-й игрок, далее по очереди
-//        в течении всего матча
+//          в течении всего матча
 //        - используется простейшая стратегия для хода компюьтера, -
 //        его ход генерируется генератором случайных чисел.
 //        Press ENTER to continue...
