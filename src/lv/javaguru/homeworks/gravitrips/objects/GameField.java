@@ -17,7 +17,7 @@ public class GameField {
         this.field = field;
     }
 
-    public boolean gameFieldIsFull() {
+    public boolean isGameFieldFull() {
         boolean isThereFreeCell = false;
         for (int i = 0; i < MAX_ROW && !isThereFreeCell; i++) {
             for (int j = 0; j < MAX_COL && !isThereFreeCell; j++) {
@@ -27,11 +27,11 @@ public class GameField {
         return !isThereFreeCell;
     }
 
-    public boolean columnIsNotBusy(int columnNumber) {
-        boolean columnIsNotBusy = true;
-        for (int i = 0; i < MAX_ROW && !(columnIsNotBusy = (field[i][columnNumber - 1] == '.')); i++) {
+    public boolean isColumnNotBusy(int columnNumber) {
+        boolean isColumnNotBusy = true;
+        for (int i = 0; i < MAX_ROW && !(isColumnNotBusy = (field[i][columnNumber - 1] == '.')); i++) {
         }
-        return columnIsNotBusy;
+        return isColumnNotBusy;
     }
 
     public void outputGameField() {
@@ -46,21 +46,35 @@ public class GameField {
         System.out.println("");
     }
 
-    public boolean playerWon(TypesOfSigns sign) {
-        boolean playerWon = true;
-        if (!fourInLineByHorizontal(sign)) {
-            if (!fourInLineByVertical(sign)) {
-                if (!fourInLineByRightDiagonal(sign)) {
-                    if (!fourInLineByLeftDiagonal(sign)) {
-                        playerWon = false;
+    public void makePlayerMove(Player player, int playerMove) {
+        boolean isGetPlayerMove = false;
+        for (int i = 0; i < MAX_ROW && !isGetPlayerMove; i++) {
+            if (field[i][playerMove - 1] == '.') {
+                isGetPlayerMove = true;
+                field[i][playerMove - 1] = player.getSign().getName();
+            }
+        }
+        if (player.getType() == TypesOfPlayers.COMPUTER) {
+            System.out.println("Player " + player.getSign().getNumber() + " as " + player.getType() + ": " + playerMove);
+        }
+    }
+
+
+    public boolean isPlayerWon(TypesOfSigns sign) {
+        boolean isPlayerWon = true;
+        if (!isFourInLineByHorizontal(sign)) {
+            if (!isFourInLineByVertical(sign)) {
+                if (!isFourInLineByRightDiagonal(sign)) {
+                    if (!isFourInLineByLeftDiagonal(sign)) {
+                        isPlayerWon = false;
                     }
                 }
             }
         }
-        return playerWon;
+        return isPlayerWon;
     }
 
-    private boolean fourInLineByHorizontal(TypesOfSigns sign) {
+    private boolean isFourInLineByHorizontal(TypesOfSigns sign) {
         int countInLine = 0;
         for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
             countInLine = 0;
@@ -71,7 +85,7 @@ public class GameField {
         return countInLine >= 4;
     }
 
-    private boolean fourInLineByVertical(TypesOfSigns sign) {
+    private boolean isFourInLineByVertical(TypesOfSigns sign) {
         int countInLine = 0;
         for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
             countInLine = 0;
@@ -82,7 +96,7 @@ public class GameField {
         return countInLine >= 4;
     }
 
-    private boolean fourInLineByRightDiagonal(TypesOfSigns sign) {
+    private boolean isFourInLineByRightDiagonal(TypesOfSigns sign) {
         int countInLine = 0;
         //main diagonal
         for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
@@ -115,7 +129,7 @@ public class GameField {
         return countInLine >= 4;
     }
 
-    private boolean fourInLineByLeftDiagonal(TypesOfSigns sign) {
+    private boolean isFourInLineByLeftDiagonal(TypesOfSigns sign) {
         int countInLine = 0;
         //side diagonal
         for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
@@ -157,120 +171,5 @@ public class GameField {
         }
         return newCountInLine;
     }
-
-
-
-//    public boolean playerWon(char[][] field) {
-//        boolean playerWon = true;
-//        if (!fourInLineByHorizontal(field)) {
-//            if (!fourInLineByVertical(field)) {
-//                if (!fourInLineByRightDiagonal(field)) {
-//                    if (!fourInLineByLeftDiagonal(field)) {
-//                        playerWon = false;
-//                    }
-//                }
-//            }
-//        }
-//        return playerWon;
-//    }
-//
-//    private boolean fourInLineByHorizontal(char[][] field) {
-//        int countInLine = 0;
-//        for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
-//            countInLine = 0;
-//            for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
-//                countInLine = countInLine(field[i][j], countInLine);
-//            }
-//        }
-//        return countInLine >= 4;
-//    }
-//
-//    private boolean fourInLineByVertical(char[][] field) {
-//        int countInLine = 0;
-//        for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
-//            countInLine = 0;
-//            for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
-//                countInLine = countInLine(field[i][j], countInLine);
-//            }
-//        }
-//        return countInLine >= 4;
-//    }
-//
-//    private boolean fourInLineByRightDiagonal(char[][] field) {
-//        int countInLine = 0;
-//        //main diagonal
-//        for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
-//            for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
-//                if (i == j) {
-//                    countInLine = countInLine(field[i][j], countInLine);
-//                }
-//            }
-//        }
-//        //under the main diagonal
-//        for (int d = 1; d < 4 && countInLine < 4; d++) {
-//            for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
-//                for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
-//                    if (i < j && j == i + d) {
-//                        countInLine = countInLine(field[i][j], countInLine);
-//                    }
-//                }
-//            }
-//        }
-//        //above the main diagonal
-//        for (int d = 1; d < 3 && countInLine < 4; d++) {
-//            for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
-//                for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
-//                    if (i > j && j == i - d) {
-//                        countInLine = countInLine(field[i][j], countInLine);
-//                    }
-//                }
-//            }
-//        }
-//        return countInLine >= 4;
-//    }
-//
-//    private boolean fourInLineByLeftDiagonal(char[][] field) {
-//        int countInLine = 0;
-//        //side diagonal
-//        for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
-//            for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
-//                if (i == MAX_ROW - j) {
-//                    countInLine = countInLine(field[i][j], countInLine);
-//                }
-//            }
-//        }
-//        //under the side diagonal
-//        for (int d = 1; d < 4 && countInLine < 4; d++) {
-//            for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
-//                for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
-//                    if (i < MAX_ROW - j && j == MAX_ROW - i - d) {
-//                        countInLine = countInLine(field[i][j], countInLine);
-//                    }
-//                }
-//            }
-//        }
-//        //above the side diagonal
-//        for (int d = 1; d < 3 && countInLine < 4; d++) {
-//            for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
-//                for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
-//                    if (i > MAX_ROW - j && j == MAX_ROW - i + d) {
-//                        countInLine = countInLine(field[i][j], countInLine);
-//                    }
-//                }
-//            }
-//        }
-//        return countInLine >= 4;
-//    }
-//
-//    private int countInLine(char fieldCell, int countInLine) {
-//        int newCountInLine;
-//        if (fieldCell == sign.getName()) {
-//            newCountInLine = countInLine + 1;
-//        } else {
-//            newCountInLine = 0;
-//        }
-//        return newCountInLine;
-//    }
-//
 
 }

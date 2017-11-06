@@ -3,15 +3,19 @@ package lv.javaguru.homeworks.gravitrips.objects;
 import java.util.Random;
 import java.util.Scanner;
 
+import static lv.javaguru.homeworks.gravitrips.objects.TypesOfSigns.O;
+import static lv.javaguru.homeworks.gravitrips.objects.TypesOfSigns.X;
+
 public class Gravitrips {
     public static final int MAX_ROW = 6;
     public static final int MAX_COL = 7;
+    public static Scanner scanner = new Scanner(System.in);
+    public static Random randomGenerator = new Random();
+
     private GameField gameField;
     private Player player1;
     private Player player2;
     private Player currentPlayer;
-    private Scanner scanner = new Scanner(System.in);
-    private Random randomGenerator = new Random();
 
     public void startGravitrips() {
 
@@ -66,12 +70,12 @@ public class Gravitrips {
         int countOfWins = 0;
         Player winnersPlayer = null;
         while (!exitFromGame) {
-            if (!gameField.gameFieldIsFull()) {
+            if (!gameField.isGameFieldFull()) {
                 currentPlayer = whoIsNextPlayer();
-                playerMove = currentPlayer.getPlayerMove(scanner, randomGenerator, gameField);
-                currentPlayer.makePlayerMove(playerMove, gameField);
+                playerMove = currentPlayer.getPlayerMove(gameField);
+                gameField.makePlayerMove(currentPlayer, playerMove);
                 gameField.outputGameField();
-                if (exitFromGame = gameField.playerWon(currentPlayer.getSign())) {
+                if (exitFromGame = gameField.isPlayerWon(currentPlayer.getSign())) {
                     winnersPlayer = currentPlayer;
                     countOfWins = winnersPlayer.getCountOfWins() + 1;
                     winnersPlayer.setCountOfWins(countOfWins);
@@ -95,54 +99,41 @@ public class Gravitrips {
     }
 
     private void whoIsWho() {
-        choseFirstPlayer();
-        choseSecondPlayer();
+        chosePlayer(X);
+        chosePlayer(O);
     }
 
-    private void choseFirstPlayer() {
+    private void chosePlayer(TypesOfSigns playerSign) {
         int userChoice = 0;
-        final int CHOICE_X_ITEM_HUMAN = 1;
-        final int CHOICE_X_ITEM_COMPUTER = 2;
-        System.out.print("\nChoose the 'X' player as called: \n"
-                + " " + CHOICE_X_ITEM_HUMAN + " - HUMAN\n"
-                + " " + CHOICE_X_ITEM_COMPUTER + " - COMPUTER\n" +
+        final int CHOICE_ITEM_HUMAN = 1;
+        final int CHOICE_ITEM_COMPUTER = 2;
+        System.out.print("\nChoose the " + "'" + playerSign.getName() + "'" + " player as called: \n"
+                + " " + CHOICE_ITEM_HUMAN + " - HUMAN\n"
+                + " " + CHOICE_ITEM_COMPUTER + " - COMPUTER\n" +
                 ">> ");
         do {
             try {
                 userChoice = Integer.parseInt(scanner.nextLine());
                 switch (userChoice) {
-                    case CHOICE_X_ITEM_HUMAN:
-                        player1 = new HumanPlayer(1, TypesOfSigns.X, TypesOfPlayers.HUMAN, 0);
+                    case CHOICE_ITEM_HUMAN:
+                        switch (playerSign) {
+                            case X:
+                                player1 = new HumanPlayer(playerSign, TypesOfPlayers.HUMAN, 0);
+                                break;
+                            case O:
+                                player2 = new HumanPlayer(playerSign, TypesOfPlayers.HUMAN, 0);
+                                break;
+                        }
                         break;
-                    case CHOICE_X_ITEM_COMPUTER:
-                        player1 = new ComputerPlayer(1, TypesOfSigns.X, TypesOfPlayers.COMPUTER, 0);
-                        break;
-                    default:
-                        System.out.println("Wrong choice! You can use only numbers from 1 or 2");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Wrong choice! You can use only numbers from 1 or 2");
-            }
-        } while (userChoice != 1 && userChoice != 2);
-    }
-
-    private void choseSecondPlayer() {
-        int userChoice = 0;
-        final int CHOICE_O_ITEM_HUMAN = 1;
-        final int CHOICE_O_ITEM_COMPUTER = 2;
-        System.out.print("\nChoose the 'O' player as called: \n"
-                + " " + CHOICE_O_ITEM_HUMAN + " - HUMAN\n"
-                + " " + CHOICE_O_ITEM_COMPUTER + " - COMPUTER\n" +
-                ">> ");
-        do {
-            try {
-                userChoice = Integer.parseInt(scanner.nextLine());
-                switch (userChoice) {
-                    case CHOICE_O_ITEM_HUMAN:
-                        player2 = new HumanPlayer(2, TypesOfSigns.O, TypesOfPlayers.HUMAN, 0);
-                        break;
-                    case CHOICE_O_ITEM_COMPUTER:
-                        player2 = new ComputerPlayer(2, TypesOfSigns.O, TypesOfPlayers.COMPUTER, 0);
+                    case CHOICE_ITEM_COMPUTER:
+                        switch (playerSign) {
+                            case X:
+                                player1 = new ComputerPlayer(playerSign, TypesOfPlayers.COMPUTER, 0);
+                                break;
+                            case O:
+                                player2 = new ComputerPlayer(playerSign, TypesOfPlayers.COMPUTER, 0);
+                                break;
+                        }
                         break;
                     default:
                         System.out.println("Wrong choice! You can use only numbers from 1 or 2");
@@ -154,20 +145,19 @@ public class Gravitrips {
     }
 
     private void setUpGame() {
-        char[][] array = {
-                {'.', '.', '.', '.', '.', '.', '.'},
-                {'.', '.', '.', '.', '.', '.', '.'},
-                {'.', '.', '.', '.', '.', '.', '.'},
-                {'.', '.', '.', '.', '.', '.', '.'},
-                {'.', '.', '.', '.', '.', '.', '.'},
-                {'.', '.', '.', '.', '.', '.', '.'}};
+        char[][] array = new char[MAX_ROW][MAX_COL];
+        for (int i = 0; i < MAX_ROW; i++) {
+            for (int j = 0; j < MAX_COL; j++) {
+                array[i][j] = '.';
+            }
+        }
         gameField = new GameField(array);
     }
 
     private Player whoIsNextPlayer() {
         if (currentPlayer == null) {
             currentPlayer = player1;
-        } else if (currentPlayer.equals(player1)) {
+        } else if (currentPlayer.getSign() == player1.getSign()) {
             currentPlayer = player2;
         } else {
             currentPlayer = player1;
@@ -179,7 +169,7 @@ public class Gravitrips {
     private void outputGameResult(Player winnersPlayer) {
         if (winnersPlayer != null) {
             System.out.println("Won: player " +
-                    winnersPlayer.getNumber() + " as " + winnersPlayer.getType());
+                    winnersPlayer.getSign().getNumber() + " as " + winnersPlayer.getType());
         } else {
             System.out.println("No one won - draw");
         }
