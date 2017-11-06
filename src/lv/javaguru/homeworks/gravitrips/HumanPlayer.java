@@ -1,6 +1,6 @@
-package lv.javaguru.homeworks.gravitrips.objects;
+package lv.javaguru.homeworks.gravitrips;
 
-import static lv.javaguru.homeworks.gravitrips.objects.Gravitrips.*;
+import static lv.javaguru.homeworks.gravitrips.Gravitrips.*;
 
 public class HumanPlayer extends Player {
 

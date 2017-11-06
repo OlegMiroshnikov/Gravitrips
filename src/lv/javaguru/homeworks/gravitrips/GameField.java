@@ -1,7 +1,6 @@
 package lv.javaguru.homeworks.gravitrips;
 
-import static lv.javaguru.homeworks.gravitrips.Gravitrips.MAX_COL;
-import static lv.javaguru.homeworks.gravitrips.Gravitrips.MAX_ROW;
+import static lv.javaguru.homeworks.gravitrips.Gravitrips.*;
 
 public class GameField {
     private char[][] field;
@@ -18,21 +17,21 @@ public class GameField {
         this.field = field;
     }
 
-    public boolean onGameFieldIsFull() {
-        boolean onThereIsFreeCell = false;
-        for (int i = 0; i < MAX_ROW && !onThereIsFreeCell; i++) {
-            for (int j = 0; j < MAX_COL && !onThereIsFreeCell; j++) {
-                onThereIsFreeCell = (field[i][j] == '.');
+    public boolean isGameFieldFull() {
+        boolean isThereFreeCell = false;
+        for (int i = 0; i < MAX_ROW && !isThereFreeCell; i++) {
+            for (int j = 0; j < MAX_COL && !isThereFreeCell; j++) {
+                isThereFreeCell = (field[i][j] == '.');
             }
         }
-        return !onThereIsFreeCell;
+        return !isThereFreeCell;
     }
 
-    public boolean onColumnIsNotBusy(int columnNumber) {
-        boolean onColumnIsNotBusy = true;
-        for (int i = 0; i < MAX_ROW && !(onColumnIsNotBusy = (field[i][columnNumber - 1] == '.')); i++) {
+    public boolean isColumnNotBusy(int columnNumber) {
+        boolean isColumnNotBusy = true;
+        for (int i = 0; i < MAX_ROW && !(isColumnNotBusy = (field[i][columnNumber - 1] == '.')); i++) {
         }
-        return onColumnIsNotBusy;
+        return isColumnNotBusy;
     }
 
     public void outputGameField() {
@@ -45,6 +44,132 @@ public class GameField {
             }
         }
         System.out.println("");
+    }
+
+    public void makePlayerMove(Player player, int playerMove) {
+        boolean isGetPlayerMove = false;
+        for (int i = 0; i < MAX_ROW && !isGetPlayerMove; i++) {
+            if (field[i][playerMove - 1] == '.') {
+                isGetPlayerMove = true;
+                field[i][playerMove - 1] = player.getSign().getName();
+            }
+        }
+        if (player.getType() == TypesOfPlayers.COMPUTER) {
+            System.out.println("Player " + player.getSign().getNumber() + " as " + player.getType() + ": " + playerMove);
+        }
+    }
+
+
+    public boolean isPlayerWon(TypesOfSigns sign) {
+        boolean isPlayerWon = true;
+        if (!isFourInLineByHorizontal(sign)) {
+            if (!isFourInLineByVertical(sign)) {
+                if (!isFourInLineByRightDiagonal(sign)) {
+                    if (!isFourInLineByLeftDiagonal(sign)) {
+                        isPlayerWon = false;
+                    }
+                }
+            }
+        }
+        return isPlayerWon;
+    }
+
+    private boolean isFourInLineByHorizontal(TypesOfSigns sign) {
+        int countInLine = 0;
+        for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
+            countInLine = 0;
+            for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
+                countInLine = countInLine(field[i][j], countInLine, sign);
+            }
+        }
+        return countInLine >= 4;
+    }
+
+    private boolean isFourInLineByVertical(TypesOfSigns sign) {
+        int countInLine = 0;
+        for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
+            countInLine = 0;
+            for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
+                countInLine = countInLine(field[i][j], countInLine, sign);
+            }
+        }
+        return countInLine >= 4;
+    }
+
+    private boolean isFourInLineByRightDiagonal(TypesOfSigns sign) {
+        int countInLine = 0;
+        //main diagonal
+        for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
+            for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
+                if (i == j) {
+                    countInLine = countInLine(field[i][j], countInLine, sign);
+                }
+            }
+        }
+        //under the main diagonal
+        for (int d = 1; d < 4 && countInLine < 4; d++) {
+            for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
+                for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
+                    if (i < j && j == i + d) {
+                        countInLine = countInLine(field[i][j], countInLine, sign);
+                    }
+                }
+            }
+        }
+        //above the main diagonal
+        for (int d = 1; d < 3 && countInLine < 4; d++) {
+            for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
+                for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
+                    if (i > j && j == i - d) {
+                        countInLine = countInLine(field[i][j], countInLine, sign);
+                    }
+                }
+            }
+        }
+        return countInLine >= 4;
+    }
+
+    private boolean isFourInLineByLeftDiagonal(TypesOfSigns sign) {
+        int countInLine = 0;
+        //side diagonal
+        for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
+            for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
+                if (i == MAX_ROW - j) {
+                    countInLine = countInLine(field[i][j], countInLine, sign);
+                }
+            }
+        }
+        //under the side diagonal
+        for (int d = 1; d < 4 && countInLine < 4; d++) {
+            for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
+                for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
+                    if (i < MAX_ROW - j && j == MAX_ROW - i - d) {
+                        countInLine = countInLine(field[i][j], countInLine, sign);
+                    }
+                }
+            }
+        }
+        //above the side diagonal
+        for (int d = 1; d < 3 && countInLine < 4; d++) {
+            for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
+                for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
+                    if (i > MAX_ROW - j && j == MAX_ROW - i + d) {
+                        countInLine = countInLine(field[i][j], countInLine, sign);
+                    }
+                }
+            }
+        }
+        return countInLine >= 4;
+    }
+
+    private int countInLine(char fieldCell, int countInLine, TypesOfSigns sign) {
+        int newCountInLine;
+        if (fieldCell == sign.getName()) {
+            newCountInLine = countInLine + 1;
+        } else {
+            newCountInLine = 0;
+        }
+        return newCountInLine;
     }
 
 }

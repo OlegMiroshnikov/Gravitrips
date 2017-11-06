@@ -38,9 +38,9 @@ note top of Player
 в ArrayList<Player>
 end note
 class Player {
-- playerNumber
-- playerSign
-- playerType: TypesOfPlayers
+- number
+- sign
+- type: TypesOfPlayers
 - countOfWins
 + getPlayerMove()
 + makePlayerMove()

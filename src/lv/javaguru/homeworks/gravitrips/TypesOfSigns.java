@@ -1,4 +1,4 @@
-package lv.javaguru.homeworks.gravitrips.objects;
+package lv.javaguru.homeworks.gravitrips;
 
 public enum TypesOfSigns {
     X('X',1),
