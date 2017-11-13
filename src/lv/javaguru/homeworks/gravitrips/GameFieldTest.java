@@ -63,7 +63,7 @@ class GameFieldTest {
     @Test
     void makePlayerMove() {
         boolean result;
-        Player humanPlayer = new HumanPlayer(TypesOfSigns.X, TypesOfPlayers.HUMAN, 0);
+        Player humanPlayer = new HumanPlayer(Signs.X, Players.HUMAN);
         char[][] array = {
                 {'.', 'X', 'O', '.', 'O', '.', '.'},
                 {'.', 'O', '.', '.', 'X', '.', '.'},
@@ -95,7 +95,7 @@ class GameFieldTest {
                 {'.', '.', '.', '.', '.', '.', '.'},
                 {'.', 'X', 'X', 'X', 'X', '.', '.'}};
         GameField gameField = new GameField(array);
-        result = gameField.isPlayerWon(TypesOfSigns.X);
+        result = gameField.isPlayerWon(Signs.X);
         assertTrue(result, "Four in line by horizontal");
 
         array = new char[][]{
@@ -106,7 +106,7 @@ class GameFieldTest {
                 {'X', '.', '.', '.', '.', '.', '.'},
                 {'X', '.', '.', '.', '.', '.', '.'}};
         gameField.setField(array);
-        result = gameField.isPlayerWon(TypesOfSigns.X);
+        result = gameField.isPlayerWon(Signs.X);
         assertTrue(result, "Four in line by vertical");
 
         array = new char[][]{
@@ -117,7 +117,7 @@ class GameFieldTest {
                 {'.', 'X', '.', '.', '.', '.', '.'},
                 {'.', '.', '.', '.', '.', '.', '.'}};
         gameField.setField(array);
-        result = gameField.isPlayerWon(TypesOfSigns.X);
+        result = gameField.isPlayerWon(Signs.X);
         assertTrue(result, "Four in line by right main diagonal");
 
         array = new char[][]{
@@ -128,7 +128,7 @@ class GameFieldTest {
                 {'.', '.', '.', '.', 'X', '.', '.'},
                 {'.', '.', '.', 'X', '.', '.', '.'}};
         gameField.setField(array);
-        result = gameField.isPlayerWon(TypesOfSigns.X);
+        result = gameField.isPlayerWon(Signs.X);
         assertTrue(result, "Four in line by under of right main diagonal");
 
         array = new char[][]{
@@ -139,7 +139,7 @@ class GameFieldTest {
                 {'.', '.', '.', '.', '.', '.', '.'},
                 {'.', '.', '.', '.', '.', '.', '.'}};
         gameField.setField(array);
-        result = gameField.isPlayerWon(TypesOfSigns.X);
+        result = gameField.isPlayerWon(Signs.X);
         assertTrue(result, "Four in line by above of right main diagonal");
 
         array = new char[][]{
@@ -150,7 +150,7 @@ class GameFieldTest {
                 {'.', '.', '.', '.', '.', 'X', '.'},
                 {'.', '.', '.', '.', '.', '.', 'X'}};
         gameField.setField(array);
-        result = gameField.isPlayerWon(TypesOfSigns.X);
+        result = gameField.isPlayerWon(Signs.X);
         assertTrue(result, "Four in line by left side diagonal");
 
         array = new char[][]{
@@ -161,7 +161,7 @@ class GameFieldTest {
                 {'.', '.', 'X', '.', '.', '.', '.'},
                 {'.', '.', '.', 'X', '.', '.', '.'}};
         gameField.setField(array);
-        result = gameField.isPlayerWon(TypesOfSigns.X);
+        result = gameField.isPlayerWon(Signs.X);
         assertTrue(result, "Four in line by under of left side diagonal");
 
         array = new char[][]{
@@ -172,7 +172,7 @@ class GameFieldTest {
                 {'.', '.', '.', '.', '.', '.', '.'},
                 {'.', '.', '.', '.', '.', '.', '.'}};
         gameField.setField(array);
-        result = gameField.isPlayerWon(TypesOfSigns.X);
+        result = gameField.isPlayerWon(Signs.X);
         assertTrue(result, "Four in line by above of left side diagonal");
     }
 }

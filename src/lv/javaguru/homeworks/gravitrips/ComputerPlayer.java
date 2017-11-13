@@ -1,11 +1,15 @@
 package lv.javaguru.homeworks.gravitrips;
 
+import java.util.Random;
+
 import static lv.javaguru.homeworks.gravitrips.Gravitrips.*;
 
 public class ComputerPlayer extends Player {
 
-    public ComputerPlayer(TypesOfSigns sign, TypesOfPlayers type, int countOfWins) {
-        super(sign, type, countOfWins);
+    private Random randomGenerator = new Random();
+
+    public ComputerPlayer(Signs sign, Players type) {
+        super(sign, type);
     }
 
     public int getPlayerMove(GameField gameField) {

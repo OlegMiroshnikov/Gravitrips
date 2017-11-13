@@ -1,29 +1,29 @@
 package lv.javaguru.homeworks.gravitrips;
 
 public abstract class Player {
-    private TypesOfSigns sign;
-    private TypesOfPlayers type;
+    private Signs sign;
+    private Players type;
     private int countOfWins;
 
-    public Player(TypesOfSigns sign, TypesOfPlayers type, int countOfWins) {
+    public Player(Signs sign, Players type) {
         this.sign = sign;
         this.type = type;
-        this.countOfWins = countOfWins;
+        this.countOfWins = 0;
     }
 
-    public TypesOfSigns getSign() {
+    public Signs getSign() {
         return sign;
     }
 
-    public void setSign(TypesOfSigns sign) {
+    public void setSign(Signs sign) {
         this.sign = sign;
     }
 
-    public TypesOfPlayers getType() {
+    public Players getType() {
         return type;
     }
 
-    public void setType(TypesOfPlayers type) {
+    public void setType(Players type) {
         this.type = type;
     }
 

@@ -54,13 +54,13 @@ public class GameField {
                 field[i][playerMove - 1] = player.getSign().getName();
             }
         }
-        if (player.getType() == TypesOfPlayers.COMPUTER) {
+        if (player.getType() == Players.COMPUTER) {
             System.out.println("Player " + player.getSign().getNumber() + " as " + player.getType() + ": " + playerMove);
         }
     }
 
 
-    public boolean isPlayerWon(TypesOfSigns sign) {
+    public boolean isPlayerWon(Signs sign) {
         boolean isPlayerWon = true;
         if (!isFourInLineByHorizontal(sign)) {
             if (!isFourInLineByVertical(sign)) {
@@ -74,7 +74,7 @@ public class GameField {
         return isPlayerWon;
     }
 
-    private boolean isFourInLineByHorizontal(TypesOfSigns sign) {
+    private boolean isFourInLineByHorizontal(Signs sign) {
         int countInLine = 0;
         for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
             countInLine = 0;
@@ -85,7 +85,7 @@ public class GameField {
         return countInLine >= 4;
     }
 
-    private boolean isFourInLineByVertical(TypesOfSigns sign) {
+    private boolean isFourInLineByVertical(Signs sign) {
         int countInLine = 0;
         for (int j = 0; j < MAX_COL && countInLine < 4; j++) {
             countInLine = 0;
@@ -96,7 +96,7 @@ public class GameField {
         return countInLine >= 4;
     }
 
-    private boolean isFourInLineByRightDiagonal(TypesOfSigns sign) {
+    private boolean isFourInLineByRightDiagonal(Signs sign) {
         int countInLine = 0;
         //main diagonal
         for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
@@ -129,7 +129,7 @@ public class GameField {
         return countInLine >= 4;
     }
 
-    private boolean isFourInLineByLeftDiagonal(TypesOfSigns sign) {
+    private boolean isFourInLineByLeftDiagonal(Signs sign) {
         int countInLine = 0;
         //side diagonal
         for (int i = 0; i < MAX_ROW && countInLine < 4; i++) {
@@ -162,7 +162,7 @@ public class GameField {
         return countInLine >= 4;
     }
 
-    private int countInLine(char fieldCell, int countInLine, TypesOfSigns sign) {
+    private int countInLine(char fieldCell, int countInLine, Signs sign) {
         int newCountInLine;
         if (fieldCell == sign.getName()) {
             newCountInLine = countInLine + 1;

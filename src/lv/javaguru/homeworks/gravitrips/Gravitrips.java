@@ -1,17 +1,15 @@
 package lv.javaguru.homeworks.gravitrips;
 
-import java.util.Random;
 import java.util.Scanner;
 
-import static lv.javaguru.homeworks.gravitrips.TypesOfSigns.O;
-import static lv.javaguru.homeworks.gravitrips.TypesOfSigns.X;
+import static lv.javaguru.homeworks.gravitrips.Signs.O;
+import static lv.javaguru.homeworks.gravitrips.Signs.X;
 
 public class Gravitrips {
     public static final int MAX_ROW = 6;
     public static final int MAX_COL = 7;
-    public static Scanner scanner = new Scanner(System.in);
-    public static Random randomGenerator = new Random();
 
+    private Scanner scanner = new Scanner(System.in);
     private GameField gameField;
     private Player player1;
     private Player player2;
@@ -71,7 +69,7 @@ public class Gravitrips {
         Player winnersPlayer = null;
         while (!exitFromGame) {
             if (!gameField.isGameFieldFull()) {
-                currentPlayer = whoIsNextPlayer();
+                whoIsNextPlayer();
                 playerMove = currentPlayer.getPlayerMove(gameField);
                 gameField.makePlayerMove(currentPlayer, playerMove);
                 gameField.outputGameField();
@@ -80,7 +78,7 @@ public class Gravitrips {
                     countOfWins = winnersPlayer.getCountOfWins() + 1;
                     winnersPlayer.setCountOfWins(countOfWins);
                 }
-                if (player1.getType() == TypesOfPlayers.COMPUTER && player2.getType() == TypesOfPlayers.COMPUTER) {
+                if (player1.getType() == Players.COMPUTER && player2.getType() == Players.COMPUTER) {
                     System.out.println("Press ENTER to continue...");
                     String anyKey = scanner.nextLine();
                 }
@@ -103,11 +101,11 @@ public class Gravitrips {
         chosePlayer(O);
     }
 
-    private void chosePlayer(TypesOfSigns playerSign) {
+    private void chosePlayer(Signs sign) {
         int userChoice = 0;
         final int CHOICE_ITEM_HUMAN = 1;
         final int CHOICE_ITEM_COMPUTER = 2;
-        System.out.print("\nChoose the " + "'" + playerSign.getName() + "'" + " player as called: \n"
+        System.out.print("\nChoose the " + "'" + sign.getName() + "'" + " player as called: \n"
                 + " " + CHOICE_ITEM_HUMAN + " - HUMAN\n"
                 + " " + CHOICE_ITEM_COMPUTER + " - COMPUTER\n" +
                 ">> ");
@@ -116,22 +114,22 @@ public class Gravitrips {
                 userChoice = Integer.parseInt(scanner.nextLine());
                 switch (userChoice) {
                     case CHOICE_ITEM_HUMAN:
-                        switch (playerSign) {
+                        switch (sign) {
                             case X:
-                                player1 = new HumanPlayer(playerSign, TypesOfPlayers.HUMAN, 0);
+                                player1 = new HumanPlayer(sign, Players.HUMAN);
                                 break;
                             case O:
-                                player2 = new HumanPlayer(playerSign, TypesOfPlayers.HUMAN, 0);
+                                player2 = new HumanPlayer(sign, Players.HUMAN);
                                 break;
                         }
                         break;
                     case CHOICE_ITEM_COMPUTER:
-                        switch (playerSign) {
+                        switch (sign) {
                             case X:
-                                player1 = new ComputerPlayer(playerSign, TypesOfPlayers.COMPUTER, 0);
+                                player1 = new ComputerPlayer(sign, Players.COMPUTER);
                                 break;
                             case O:
-                                player2 = new ComputerPlayer(playerSign, TypesOfPlayers.COMPUTER, 0);
+                                player2 = new ComputerPlayer(sign, Players.COMPUTER);
                                 break;
                         }
                         break;
@@ -154,7 +152,7 @@ public class Gravitrips {
         gameField = new GameField(array);
     }
 
-    private Player whoIsNextPlayer() {
+    private void whoIsNextPlayer() {
         if (currentPlayer == null) {
             currentPlayer = player1;
         } else if (currentPlayer.getSign() == player1.getSign()) {
@@ -162,9 +160,7 @@ public class Gravitrips {
         } else {
             currentPlayer = player1;
         }
-        return currentPlayer;
     }
-
 
     private void outputGameResult(Player winnersPlayer) {
         if (winnersPlayer != null) {

@@ -1,11 +1,15 @@
 package lv.javaguru.homeworks.gravitrips;
 
+import java.util.Scanner;
+
 import static lv.javaguru.homeworks.gravitrips.Gravitrips.*;
 
 public class HumanPlayer extends Player {
 
-    public HumanPlayer(TypesOfSigns sign, TypesOfPlayers type, int countOfWins) {
-        super(sign, type, countOfWins);
+    private Scanner scanner = new Scanner(System.in);
+
+    public HumanPlayer(Signs sign, Players type) {
+        super(sign, type);
     }
 
     public int getPlayerMove(GameField gameField) {

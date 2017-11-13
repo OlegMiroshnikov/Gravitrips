@@ -1,10 +1,10 @@
 package lv.javaguru.homeworks.gravitrips;
 
-public enum TypesOfSigns {
+public enum Signs {
     X('X',1),
     O('O',2);
 
-    TypesOfSigns(char name, int number) {
+    Signs(char name, int number) {
         this.name = name;
         this.number = number;
     }
