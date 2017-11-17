@@ -12,18 +12,18 @@ public class Gravitrips {
         boolean exitFromGravitrips = false;
         boolean exitFromMatch = false;
         int matchNumber = 0;
-        int gameNumber = 0;
         outputInstructionsToUser();
         while (!exitFromGravitrips) {
             matchNumber++;
             Match match = new Match(matchNumber);
             System.out.println(match);
-            gameNumber = 0;
+            int gameNumber = 0;
             exitFromMatch = false;
             while (!exitFromMatch) {
                 gameNumber++;
-                System.out.println(gameNumber + " game");
-                match.toPlayGame();
+                Game game = new Game(gameNumber, match);
+                System.out.println(game);
+                game.toPlayGame();
                 exitFromMatch = exitFromMatch();
             }
             match.outputMatchResult();
