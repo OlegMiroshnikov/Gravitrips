@@ -1,23 +1,20 @@
 package lv.javaguru.homeworks.gravitrips;
 
 public enum Signs {
-    X('X',1),
-    O('O',2);
+    X("X"),
+    O("O"),
+    EMPTY(".");
 
-    Signs(char name, int number) {
-        this.name = name;
-        this.number = number;
+    private String value;
+
+    private Signs(String value) {
+        this.value = value;
     }
 
-    private char name;
-    private int number;
-
-    public int getNumber() {
-        return number;
-    }
-
-    public char getName() {
-        return name;
+    @Override
+    public String toString() {
+        return value;
     }
 }
+
 

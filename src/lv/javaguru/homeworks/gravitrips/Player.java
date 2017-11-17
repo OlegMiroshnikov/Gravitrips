@@ -15,16 +15,8 @@ public abstract class Player {
         return sign;
     }
 
-    public void setSign(Signs sign) {
-        this.sign = sign;
-    }
-
     public Players getType() {
         return type;
-    }
-
-    public void setType(Players type) {
-        this.type = type;
     }
 
     public int getCountOfWins() {
@@ -35,8 +27,11 @@ public abstract class Player {
         this.countOfWins = countOfWins;
     }
 
+    @Override
+    public String toString() {
+        return "Player " + (getSign().ordinal()+1) + " as " + getType();
+    }
     public abstract int getPlayerMove(GameField gameField);
-
 
 
 }

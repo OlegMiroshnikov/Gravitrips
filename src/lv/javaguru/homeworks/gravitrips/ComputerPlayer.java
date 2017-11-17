@@ -1,7 +1,6 @@
 package lv.javaguru.homeworks.gravitrips;
 
 import java.util.Random;
-
 import static lv.javaguru.homeworks.gravitrips.Gravitrips.*;
 
 public class ComputerPlayer extends Player {

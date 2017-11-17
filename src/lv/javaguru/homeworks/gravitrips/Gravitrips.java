@@ -2,40 +2,31 @@ package lv.javaguru.homeworks.gravitrips;
 
 import java.util.Scanner;
 
-import static lv.javaguru.homeworks.gravitrips.Signs.O;
-import static lv.javaguru.homeworks.gravitrips.Signs.X;
-
 public class Gravitrips {
     public static final int MAX_ROW = 6;
     public static final int MAX_COL = 7;
 
     private Scanner scanner = new Scanner(System.in);
-    private GameField gameField;
-    private Player player1;
-    private Player player2;
-    private Player currentPlayer;
 
     public void startGravitrips() {
-
         boolean exitFromGravitrips = false;
         boolean exitFromMatch = false;
-        int countOfGames = 0;
-        int countOfMatches = 0;
+        int matchNumber = 0;
+        int gameNumber = 0;
         outputInstructionsToUser();
         while (!exitFromGravitrips) {
-            countOfMatches++;
-            System.out.println(countOfMatches + " match");
-            setUpMatch(countOfMatches);
-            countOfGames = 0;
+            matchNumber++;
+            Match match = new Match(matchNumber);
+            System.out.println(match);
+            gameNumber = 0;
             exitFromMatch = false;
             while (!exitFromMatch) {
-                countOfGames++;
-                System.out.println(countOfGames + " game");
-                setUpGame();
-                toPlayGame();
+                gameNumber++;
+                System.out.println(gameNumber + " game");
+                match.toPlayGame();
                 exitFromMatch = exitFromMatch();
             }
-            outputMatchResult(countOfMatches);
+            match.outputMatchResult();
             exitFromGravitrips = exitFromGravitrips();
         }
         finishGravitrips();
@@ -60,121 +51,6 @@ public class Gravitrips {
                         "  его ход генерируется генератором случайных чисел.           ");
         System.out.println("Press ENTER to continue...");
         String aneKey = scanner.nextLine();
-    }
-
-    private void toPlayGame() {
-        boolean exitFromGame = false;
-        int playerMove = 0;
-        int countOfWins = 0;
-        Player winnersPlayer = null;
-        while (!exitFromGame) {
-            if (!gameField.isGameFieldFull()) {
-                whoIsNextPlayer();
-                playerMove = currentPlayer.getPlayerMove(gameField);
-                gameField.makePlayerMove(currentPlayer, playerMove);
-                gameField.outputGameField();
-                if (exitFromGame = gameField.isPlayerWon(currentPlayer.getSign())) {
-                    winnersPlayer = currentPlayer;
-                    countOfWins = winnersPlayer.getCountOfWins() + 1;
-                    winnersPlayer.setCountOfWins(countOfWins);
-                }
-                if (player1.getType() == Players.COMPUTER && player2.getType() == Players.COMPUTER) {
-                    System.out.println("Press ENTER to continue...");
-                    String anyKey = scanner.nextLine();
-                }
-            } else {
-                exitFromGame = true;
-            }
-        }
-        outputGameResult(winnersPlayer);
-    }
-
-    private void setUpMatch(int countOfMatches) {
-        whoIsWho();
-        currentPlayer = null;
-        System.out.println(countOfMatches + " match " +
-                player1.getType() + " - " + player2.getType());
-    }
-
-    private void whoIsWho() {
-        chosePlayer(X);
-        chosePlayer(O);
-    }
-
-    private void chosePlayer(Signs sign) {
-        int userChoice = 0;
-        final int CHOICE_ITEM_HUMAN = 1;
-        final int CHOICE_ITEM_COMPUTER = 2;
-        System.out.print("\nChoose the " + "'" + sign.getName() + "'" + " player as called: \n"
-                + " " + CHOICE_ITEM_HUMAN + " - HUMAN\n"
-                + " " + CHOICE_ITEM_COMPUTER + " - COMPUTER\n" +
-                ">> ");
-        do {
-            try {
-                userChoice = Integer.parseInt(scanner.nextLine());
-                switch (userChoice) {
-                    case CHOICE_ITEM_HUMAN:
-                        switch (sign) {
-                            case X:
-                                player1 = new HumanPlayer(sign, Players.HUMAN);
-                                break;
-                            case O:
-                                player2 = new HumanPlayer(sign, Players.HUMAN);
-                                break;
-                        }
-                        break;
-                    case CHOICE_ITEM_COMPUTER:
-                        switch (sign) {
-                            case X:
-                                player1 = new ComputerPlayer(sign, Players.COMPUTER);
-                                break;
-                            case O:
-                                player2 = new ComputerPlayer(sign, Players.COMPUTER);
-                                break;
-                        }
-                        break;
-                    default:
-                        System.out.println("Wrong choice! You can use only numbers from 1 or 2");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Wrong choice! You can use only numbers from 1 or 2");
-            }
-        } while (userChoice != 1 && userChoice != 2);
-    }
-
-    private void setUpGame() {
-        char[][] array = new char[MAX_ROW][MAX_COL];
-        for (int i = 0; i < MAX_ROW; i++) {
-            for (int j = 0; j < MAX_COL; j++) {
-                array[i][j] = '.';
-            }
-        }
-        gameField = new GameField(array);
-    }
-
-    private void whoIsNextPlayer() {
-        if (currentPlayer == null) {
-            currentPlayer = player1;
-        } else if (currentPlayer.getSign() == player1.getSign()) {
-            currentPlayer = player2;
-        } else {
-            currentPlayer = player1;
-        }
-    }
-
-    private void outputGameResult(Player winnersPlayer) {
-        if (winnersPlayer != null) {
-            System.out.println("Won: player " +
-                    winnersPlayer.getSign().getNumber() + " as " + winnersPlayer.getType());
-        } else {
-            System.out.println("No one won - draw");
-        }
-    }
-
-    private void outputMatchResult(int countOfMatches) {
-        System.out.println(countOfMatches + " match " +
-                player1.getType() + "-" + player2.getType() + ", results " +
-                player1.getCountOfWins() + " : " + player2.getCountOfWins());
     }
 
     private boolean exitFromMatch() {

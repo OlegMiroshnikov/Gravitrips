@@ -3,17 +3,18 @@ package lv.javaguru.homeworks.gravitrips;
 import static lv.javaguru.homeworks.gravitrips.Gravitrips.*;
 
 public class GameField {
-    private char[][] field;
 
-    public char[][] getField() {
-        return field;
-    }
+    private Signs[][] field;
 
-    public void setField(char[][] field) {
+    public GameField(Signs[][] field) {
         this.field = field;
     }
 
-    public GameField(char[][] field) {
+    public Signs[][] getField() {
+        return field;
+    }
+
+    public void setField(Signs[][] field) {
         this.field = field;
     }
 
@@ -21,7 +22,7 @@ public class GameField {
         boolean isThereFreeCell = false;
         for (int i = 0; i < MAX_ROW && !isThereFreeCell; i++) {
             for (int j = 0; j < MAX_COL && !isThereFreeCell; j++) {
-                isThereFreeCell = (field[i][j] == '.');
+                isThereFreeCell = (field[i][j] == Signs.EMPTY);
             }
         }
         return !isThereFreeCell;
@@ -29,7 +30,7 @@ public class GameField {
 
     public boolean isColumnNotBusy(int columnNumber) {
         boolean isColumnNotBusy = true;
-        for (int i = 0; i < MAX_ROW && !(isColumnNotBusy = (field[i][columnNumber - 1] == '.')); i++) {
+        for (int i = 0; i < MAX_ROW && !(isColumnNotBusy = (field[i][columnNumber - 1] == Signs.EMPTY)); i++) {
         }
         return isColumnNotBusy;
     }
@@ -49,13 +50,13 @@ public class GameField {
     public void makePlayerMove(Player player, int playerMove) {
         boolean isGetPlayerMove = false;
         for (int i = 0; i < MAX_ROW && !isGetPlayerMove; i++) {
-            if (field[i][playerMove - 1] == '.') {
+            if (field[i][playerMove - 1] == Signs.EMPTY) {
                 isGetPlayerMove = true;
-                field[i][playerMove - 1] = player.getSign().getName();
+                field[i][playerMove - 1] = player.getSign();
             }
         }
         if (player.getType() == Players.COMPUTER) {
-            System.out.println("Player " + player.getSign().getNumber() + " as " + player.getType() + ": " + playerMove);
+            System.out.println(player + ": " + playerMove);
         }
     }
 
@@ -162,14 +163,13 @@ public class GameField {
         return countInLine >= 4;
     }
 
-    private int countInLine(char fieldCell, int countInLine, Signs sign) {
+    private int countInLine(Signs fieldCell, int countInLine, Signs sign) {
         int newCountInLine;
-        if (fieldCell == sign.getName()) {
+        if (fieldCell == sign) {
             newCountInLine = countInLine + 1;
         } else {
             newCountInLine = 0;
         }
         return newCountInLine;
     }
-
 }

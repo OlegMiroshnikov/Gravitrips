@@ -1,7 +1,6 @@
 package lv.javaguru.homeworks.gravitrips;
 
 import java.util.Scanner;
-
 import static lv.javaguru.homeworks.gravitrips.Gravitrips.*;
 
 public class HumanPlayer extends Player {
@@ -17,7 +16,7 @@ public class HumanPlayer extends Player {
         boolean isInputOK = false;
         while (!isInputOK) {
             try {
-                System.out.println("Player " + getSign().getNumber() + " as " + getType() + ", please, enter a column number:");
+                System.out.println(this + ", please, enter a column number:");
                 columnNumber = Integer.valueOf(scanner.nextLine());
                 if (!(isInputOK = (columnNumber >= 1 && columnNumber <= MAX_COL))) {
                     System.out.println("You can use only numbers from 1 to " + MAX_COL + ", choose another column.");
